@@ -1,5 +1,5 @@
 {
-  "name": "hyperproxy",
+  "name": "hyperport",
   "version": "1.0.0",
   "description": "TCP proxy over Hyperswarm!",
   "main": "index.js",
@@ -9,17 +9,17 @@
   },
   "devDependencies": {},
   "bin": {
-    "hyperproxy-server": "./server.js",
-    "hyperproxy": "./client.js"
+    "hyperport-server": "./server.js",
+    "hyperport": "./client.js"
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/bitfinexcom/hyperproxy.git"
+    "url": "https://github.com/bitfinexcom/hyperport.git"
   },
   "author": "Mathias Buus (@bitfinexcom)",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/bitfinexcom/hyperproxy/issues"
+    "url": "https://github.com/bitfinexcom/hyperport/issues"
   },
-  "homepage": "https://github.com/bitfinexcom/hyperproxy"
+  "homepage": "https://github.com/bitfinexcom/hyperport"
 }

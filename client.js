@@ -39,18 +39,24 @@ if (!conf.peer) {
 
 const dht = new HyperDHT()
 
-const proxy = net.createServer(function (socket) {
+const proxy = net.createServer(c => {
   return connHandler(c, () => {
-    return dht.connect(Buffer.from(conf.peer, 'hex'))
+    const stream = dht.connect(Buffer.from(conf.peer, 'hex'))
+
+    setImmediate(() => {
+     stream.emit('connect')
+    })
+
+    return stream
   })
 })
 
-proxy.listen(+argv.p, function () {
+proxy.listen(+argv.p, () => {
   console.log(`Server ready @${argv.p}`)
 })
 
-process.once('SIGINT', function () {
-  dht.destroy().then(function () {
+process.once('SIGINT', () => {
+  dht.destroy().then(() => {
     process.exit()
   })
 })

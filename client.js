@@ -1,7 +1,6 @@
 #!/usr/bin/env node
 const HyperDHT = require('@hyperswarm/dht')
 const net = require('net')
-const pump = require('pump')
 const fs = require('fs')
 const argv = require('minimist')(process.argv.slice(2))
 const connHandler = require('./lib.js').connHandler

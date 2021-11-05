@@ -1,5 +1,5 @@
 {
-  "name": "hyperport",
+  "name": "hypertele",
   "version": "1.0.0",
   "description": "TCP proxy over Hyperswarm!",
   "main": "index.js",
@@ -9,17 +9,17 @@
   },
   "devDependencies": {},
   "bin": {
-    "hyperport-server": "./server.js",
-    "hyperport": "./client.js"
+    "hypertele-server": "./server.js",
+    "hypertele": "./client.js"
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/bitfinexcom/hyperport.git"
+    "url": "https://github.com/bitfinexcom/hypertele.git"
   },
   "author": "Mathias Buus (@bitfinexcom)",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/bitfinexcom/hyperport/issues"
+    "url": "https://github.com/bitfinexcom/hypertele/issues"
   },
-  "homepage": "https://github.com/bitfinexcom/hyperport"
+  "homepage": "https://github.com/bitfinexcom/hypertele"
 }

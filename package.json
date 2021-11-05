@@ -1,0 +1,26 @@
+{
+  "name": "hyperproxy",
+  "version": "1.0.0",
+  "description": "TCP proxy over Hyperswarm!",
+  "main": "index.js",
+  "dependencies": {
+    "@hyperswarm/dht": "next",
+    "minimist": "^1.2.5",
+    "pump": "^3.0.0"
+  },
+  "devDependencies": {},
+  "bin": {
+    "hyperproxy-server": "./server.js",
+    "hyperproxy": "./client.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/bitfinexcom/hyperproxy.git"
+  },
+  "author": "Mathias Buus (@bitfinexcom)",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/bitfinexcom/hyperproxy/issues"
+  },
+  "homepage": "https://github.com/bitfinexcom/hyperproxy"
+}

@@ -14,6 +14,10 @@ module.exports = {
     })
 
     loc.on('data', d => {
+      if (!remConnected) {
+        return
+      }
+
       connection.write(d)
     })
 

@@ -1,6 +1,6 @@
 {
   "name": "hypertele",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "TCP proxy over Hyperswarm!",
   "main": "index.js",
   "dependencies": {
@@ -16,7 +16,7 @@
     "type": "git",
     "url": "https://github.com/bitfinexcom/hypertele.git"
   },
-  "author": "Mathias Buus (@bitfinexcom)",
+  "author": "Paolo Ardoino (@bitfinexcom)",
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/bitfinexcom/hypertele/issues"

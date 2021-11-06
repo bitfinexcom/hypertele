@@ -11,29 +11,39 @@ module.exports = {
 
     loc.on('error', err => {
       console.error(err)
+      try {
+        loc.end()
+      } catch (e) {
+        console.error(e)
+      }
     })
 
     loc.on('data', d => {
-      if (!remConnected) {
-        return
+      try {
+        connection.write(d)
+      } catch (e) {
+        console.error(e)
       }
-
-      connection.write(d)
-    })
-
-    connection.on('close', x => {
-      if (locConnected) {
-        loc.end()
-        locConnected = false
-      } 
     })
 
     loc.on('close', x => {
       locConnected = false
 
       if (remConnected) {
-        connection.end()
+        try {
+          connection.end()
+        } catch (e) {
+          console.error(e)
+        }
         remConnected = false
+      }
+    })
+
+    connection.on('error', err => {
+      try {
+        connection.end()
+      } catch (e) {
+        console.error(e)
       }
     })
 
@@ -42,7 +52,22 @@ module.exports = {
         return
       }
 
-      loc.write(d)
+      try {
+        loc.write(d)
+      } catch (e) {
+        console.error(e)
+      }
+    })
+
+    connection.on('close', x => {
+      if (locConnected) {
+        try {
+          loc.end()
+        } catch (e) {
+          console.error(e)
+        }
+        locConnected = false
+      } 
     })
   }
 }

@@ -1,6 +1,6 @@
 {
   "name": "hypertele",
-  "version": "1.0.6",
+  "version": "1.0.7",
   "description": "TCP proxy over Hyperswarm!",
   "main": "index.js",
   "dependencies": {

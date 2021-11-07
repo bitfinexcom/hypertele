@@ -40,13 +40,7 @@ const dht = new HyperDHT()
 
 const proxy = net.createServer(c => {
   return connHandler(c, () => {
-    const stream = dht.connect(Buffer.from(conf.peer, 'hex'))
-
-    setImmediate(() => {
-     stream.emit('connect')
-    })
-
-    return stream
+    return dht.connect(Buffer.from(conf.peer, 'hex'))
   })
 })
 

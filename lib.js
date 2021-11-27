@@ -4,7 +4,7 @@ module.exports = {
 
     const unpipe = () => {
       connection.destroy()
-      loc.destroy()
+      // loc.destroy()
     }
 
     loc.on('connect', err => {

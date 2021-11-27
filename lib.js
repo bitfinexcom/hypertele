@@ -1,73 +1,42 @@
 module.exports = {
-  connHandler: (connection, _dst) => {
-    let locConnected = false
-    let remConnected = true
-
+  connHandler: (connection, _dst, opts = {}) => {
     const loc = _dst() 
 
     loc.on('connect', err => {
-      locConnected = true
+      if (opts.debug) {
+        console.log('connected')
+      }
     })
 
     loc.on('error', err => {
-      console.error(err)
-      try {
-        loc.end()
-      } catch (e) {
-        console.error(e)
+      if (opts.debug) {
+        console.error(err)
       }
+      unpipe()
     })
 
     loc.on('data', d => {
-      try {
-        connection.write(d)
-      } catch (e) {
-        console.error(e)
-      }
+      connection.write(d)
     })
 
-    loc.on('close', x => {
-      locConnected = false
-
-      if (remConnected) {
-        try {
-          connection.end()
-        } catch (e) {
-          console.error(e)
-        }
-        remConnected = false
-      }
-    })
+    loc.on('close', unpipe)
 
     connection.on('error', err => {
-      try {
-        connection.end()
-      } catch (e) {
-        console.error(e)
+      if (opts.debug) {
+        console.error(err)
       }
+      unpipe()
     })
 
     connection.on('data', d => {
-      if (!locConnected) {
-        return
-      }
-
-      try {
-        loc.write(d)
-      } catch (e) {
-        console.error(e)
-      }
+      loc.write(d)
     })
 
-    connection.on('close', x => {
-      if (locConnected) {
-        try {
-          loc.end()
-        } catch (e) {
-          console.error(e)
-        }
-        locConnected = false
-      } 
-    })
+    connection.on('close', unpipe)
+
+    const unpipe = () => {
+      connection.destroy()
+      loc.destroy()
+    }
   }
 }

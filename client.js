@@ -47,7 +47,7 @@ const proxy = net.createServer(c => {
     })
 
     return stream
-  }, { debug: debug })
+  }, {})
 })
 
 proxy.listen(+argv.p, () => {

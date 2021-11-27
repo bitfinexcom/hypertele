@@ -3,7 +3,7 @@ module.exports = {
     const loc = _dst() 
 
     const unpipe = () => {
-      connection.destroy()
+      // connection.destroy()
       loc.destroy()
     }
 

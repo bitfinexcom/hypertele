@@ -57,11 +57,19 @@ let connections = 0
 
 const server = dht.createServer(c => {
   connections++
-  if (debug) console.log('Connection received, active connections', connections)
+
+  if (debug) {
+    console.log('Connection received, active connections', connections)
+  }
+
   c.on('close', function () {
     connections--
-    if (debug) console.log('Connection closed, active connections', connections)
+
+    if (debug) {
+      console.log('Connection closed, active connections', connections)
+    }
   })
+
   return connHandler(c, () => {
     return net.connect(+argv.l, '127.0.0.1')
   })

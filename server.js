@@ -72,7 +72,7 @@ const server = dht.createServer(c => {
 
   return connHandler(c, () => {
     return net.connect(+argv.l, '127.0.0.1')
-  })
+  }, { debug: debug })
 })
 
 server.listen(keyPair).then(() => {

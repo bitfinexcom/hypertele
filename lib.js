@@ -2,6 +2,11 @@ module.exports = {
   connHandler: (connection, _dst, opts = {}) => {
     const loc = _dst() 
 
+    const unpipe = () => {
+      connection.destroy()
+      loc.destroy()
+    }
+
     loc.on('connect', err => {
       if (opts.debug) {
         console.log('connected')
@@ -33,10 +38,5 @@ module.exports = {
     })
 
     connection.on('close', unpipe)
-
-    const unpipe = () => {
-      connection.destroy()
-      loc.destroy()
-    }
   }
 }

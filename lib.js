@@ -13,32 +13,26 @@ module.exports = {
       if (opts.debug) {
         console.log('connected')
       }
-    })
-
-    loc.on('error', err => {
+    }).on('error', err => {
       if (opts.debug) {
         console.error(err)
       }
       unpipe()
-    })
-
-    loc.on('data', d => {
+    }).on('data', d => {
       connection.write(d)
-    })
-
-    loc.on('close', unpipe)
+    }).on('end', () => {
+      connection.end()
+    }).on('close', unpipe)
 
     connection.on('error', err => {
       if (opts.debug) {
         console.error(err)
       }
       unpipe()
-    })
-
-    connection.on('data', d => {
+    }).on('data', d => {
       loc.write(d)
-    })
-
-    connection.on('close', unpipe)
+    }).on('end', () => {
+      loc.end()
+    }).on('close', unpipe)
   }
 }

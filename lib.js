@@ -22,6 +22,7 @@ module.exports = {
       connection.write(d)
     }).on('end', () => {
       connection.end()
+      unpipe()
     }).on('close', unpipe)
 
     connection.on('error', err => {
@@ -33,6 +34,7 @@ module.exports = {
       loc.write(d)
     }).on('end', () => {
       loc.end()
+      unpipe()
     }).on('close', unpipe)
   }
 }

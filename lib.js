@@ -1,12 +1,31 @@
 module.exports = {
-  connHandler: (connection, _dst, opts = {}) => {
-    const loc = _dst() 
+  connHandler: (connection, _dst, opts = {}, stats = {}) => {
+    const loc = _dst()
+
+    if (!stats.locCnt) {
+      stats.locCnt = 0
+//      stats.locCntPiped = 0
+    }
+
+    if (!stats.remCnt) {
+      stats.remCnt = 0
+//      stats.remCntPiped = 0
+    }
+
+    stats.locCnt++
+//    stats.locCntPiped++
+    stats.remCnt++
+//    stats.remCntPiped++
 
     const unpipe = () => {
       setTimeout(() => {
+        loc.destroy()
         connection.destroy()
       }, 100)
-      loc.destroy()
+      loc.end()
+      connection.end()
+//      stats.locCntPiped--
+//      stats.remCntPiped--
     }
 
     loc.on('connect', err => {
@@ -20,10 +39,10 @@ module.exports = {
       unpipe()
     }).on('data', d => {
       connection.write(d)
-    }).on('end', () => {
-      connection.end()
+    }).on('end', unpipe).on('close', () => {
+      stats.locCnt--
       unpipe()
-    }).on('close', unpipe)
+    })
 
     connection.on('error', err => {
       if (opts.debug) {
@@ -32,9 +51,10 @@ module.exports = {
       unpipe()
     }).on('data', d => {
       loc.write(d)
-    }).on('end', () => {
-      loc.end()
+    }).on('end', unpipe).on('close', () => {
+      stats.remCnt--
       unpipe()
-    }).on('close', unpipe)
+    })
+
   }
 }

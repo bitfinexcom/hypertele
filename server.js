@@ -53,31 +53,23 @@ const dht = new HyperDHT()
 const keyPair = HyperDHT.keyPair(seed)
 const debug = argv.debug
 
-let connections = 0
+const stats = {}
 
 const server = dht.createServer(c => {
-  connections++
-
-  if (debug) {
-    console.log('Connection received, active connections', connections)
-  }
-
-  c.on('close', function () {
-    connections--
-
-    if (debug) {
-      console.log('Connection closed, active connections', connections)
-    }
-  })
-
   return connHandler(c, () => {
     return net.connect(+argv.l, '127.0.0.1')
-  }, { debug: debug })
+  }, { debug: debug }, stats)
 })
 
 server.listen(keyPair).then(() => {
   console.log('hyperproxy:', keyPair.publicKey.toString('hex'))
 })
+
+if (debug) {
+  setInterval(() => {
+    console.log('connection stats', stats)
+  }, 5000)
+}
 
 process.once('SIGINT', function () {
   dht.destroy()

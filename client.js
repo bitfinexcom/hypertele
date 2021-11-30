@@ -36,7 +36,11 @@ if (!conf.peer) {
   process.exit(-1)
 }
 
+const debug = argv.debug
+
 const dht = new HyperDHT()
+
+const stats = {}
 
 const proxy = net.createServer(c => {
   return connHandler(c, () => {
@@ -47,8 +51,14 @@ const proxy = net.createServer(c => {
     })
 
     return stream
-  }, {})
+  }, {}, stats)
 })
+
+if (debug) {
+  setInterval(() => {
+    console.log('connection stats', stats)
+  }, 5000)
+}
 
 proxy.listen(+argv.p, () => {
   console.log(`Server ready @${argv.p}`)

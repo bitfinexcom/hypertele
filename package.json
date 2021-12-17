@@ -1,10 +1,11 @@
 {
   "name": "hypertele",
-  "version": "1.0.22",
+  "version": "1.0.23",
   "description": "TCP proxy over Hyperswarm!",
   "main": "index.js",
   "dependencies": {
     "@hyperswarm/dht": "next",
+    "heapdump": "^0.3.15",
     "minimist": "^1.2.5"
   },
   "devDependencies": {},

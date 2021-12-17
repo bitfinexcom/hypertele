@@ -38,6 +38,10 @@ if (!conf.peer) {
 
 const debug = argv.debug
 
+if (debug) {
+  require('heapdump')
+}
+
 const dht = new HyperDHT()
 
 const stats = {}

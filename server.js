@@ -47,11 +47,16 @@ if (!conf.seed) {
   process.exit(-1)
 }
 
+const debug = argv.debug
+
+if (debug) {
+  require('heapdump')
+}
+
 const seed = Buffer.from(conf.seed, 'hex')
 
 const dht = new HyperDHT()
 const keyPair = HyperDHT.keyPair(seed)
-const debug = argv.debug
 
 const stats = {}
 

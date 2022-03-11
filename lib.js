@@ -1,3 +1,5 @@
+const pump = require('pump')
+
 module.exports = {
   connHandler: (connection, _dst, opts = {}, stats = {}) => {
     const loc = _dst()
@@ -17,16 +19,7 @@ module.exports = {
     stats.remCnt++
 //    stats.remCntPiped++
 
-    const unpipe = () => {
-      setTimeout(() => {
-        loc.destroy()
-        connection.destroy()
-      }, 100)
-      loc.end()
-      connection.end()
-//      stats.locCntPiped--
-//      stats.remCntPiped--
-    }
+    pump(loc, connection, loc)
 
     loc.on('connect', err => {
       if (opts.debug) {
@@ -36,25 +29,16 @@ module.exports = {
       if (opts.debug) {
         console.error(err)
       }
-      unpipe()
-    }).on('data', d => {
-      connection.write(d)
-    }).on('end', unpipe).on('close', () => {
+    }).on('close', () => {
       stats.locCnt--
-      unpipe()
     })
 
     connection.on('error', err => {
       if (opts.debug) {
         console.error(err)
       }
-      unpipe()
-    }).on('data', d => {
-      loc.write(d)
-    }).on('end', unpipe).on('close', () => {
+    }).on('close', () => {
       stats.remCnt--
-      unpipe()
     })
-
   }
 }

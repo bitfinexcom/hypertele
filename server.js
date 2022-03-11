@@ -62,7 +62,7 @@ const stats = {}
 
 const server = dht.createServer(c => {
   return connHandler(c, () => {
-    return net.connect(+argv.l, '127.0.0.1')
+    return net.connect({ port: +argv.l, host: '127.0.0.1', allowHalfOpen: true })
   }, { debug: debug }, stats)
 })
 

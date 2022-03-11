@@ -46,15 +46,9 @@ const dht = new HyperDHT()
 
 const stats = {}
 
-const proxy = net.createServer(c => {
+const proxy = net.createServer({ allowHalfOpen: true }, c => {
   return connHandler(c, () => {
-    const stream = dht.connect(Buffer.from(conf.peer, 'hex'))
-
-    setImmediate(() => {
-     stream.emit('connect')
-    })
-
-    return stream
+    return dht.connect(Buffer.from(conf.peer, 'hex'))
   }, {}, stats)
 })
 

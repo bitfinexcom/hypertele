@@ -1,5 +1,3 @@
-const pump = require('pump')
-
 module.exports = {
   connHandler: (connection, _dst, opts = {}, stats = {}) => {
     const loc = _dst()
@@ -19,7 +17,15 @@ module.exports = {
     stats.remCnt++
 //    stats.remCntPiped++
 
-    pump(loc, connection, loc)
+    let destroyed = false
+
+    loc.pipe(connection).pipe(loc)
+
+    loc.on('error', destroy)
+    loc.on('close', destroy)
+
+    connection.on('error', destroy)
+    connection.on('close', destroy)
 
     loc.on('connect', err => {
       if (opts.debug) {
@@ -40,5 +46,12 @@ module.exports = {
     }).on('close', () => {
       stats.remCnt--
     })
+
+    function destroy (err) {
+      if (destroyed) return
+      destroyed = true
+      loc.destroy(err)
+      connection.destroy(err)
+    }
   }
 }

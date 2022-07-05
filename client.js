@@ -44,7 +44,7 @@ const stats = {}
 
 const proxy = net.createServer({ allowHalfOpen: true }, c => {
   return connHandler(c, () => {
-    return dht.connect(Buffer.from(conf.peer, 'hex'))
+    return dht.connect(Buffer.from(conf.peer, 'hex'), { reusableSocket: true })
   }, {}, stats)
 })
 

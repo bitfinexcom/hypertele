@@ -49,10 +49,6 @@ if (!conf.seed) {
 
 const debug = argv.debug
 
-if (debug) {
-  require('heapdump')
-}
-
 const seed = Buffer.from(conf.seed, 'hex')
 
 const dht = new HyperDHT()

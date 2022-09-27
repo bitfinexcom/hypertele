@@ -46,8 +46,9 @@ if (!conf.peer) {
 
 const debug = argv.debug
 
+const keyfile = argv.k || conf.keyfile
 const dht = new HyperDHT({
-  keyPair: argv.k && parseKeyPair(fs.readFileSync(argv.k))
+  keyPair: keyfile && parseKeyPair(fs.readFileSync(keyfile))
 })
 
 const stats = {}

@@ -1,6 +1,17 @@
 module.exports = {
   connHandler: (connection, _dst, opts = {}, stats = {}) => {
     const loc = _dst()
+    if (loc === null) {
+      connection.destroy() // don't return rejection error
+
+      if (!stats.rejectCnt) {
+        stats.rejectCnt = 0
+      }
+
+      stats.rejectCnt++
+
+      return
+    }
 
     if (!stats.locCnt) {
       stats.locCnt = 0

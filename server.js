@@ -63,7 +63,7 @@ const stats = {}
 
 const server = dht.createServer(c => {
   return connHandler(c, () => {
-    if (allow !== null && !find(allow, c.remotePublicKey)) return
+    if (allow !== null && !find(allow, c.remotePublicKey)) return null
     return net.connect({ port: +argv.l, host: '127.0.0.1', allowHalfOpen: true })
   }, { debug: debug }, stats)
 })
@@ -89,5 +89,5 @@ function randomBytes (n) {
 }
 
 function find (arr, buf) {
-  return arr.findIndex(k => k.equals(buf)) < 0
+  return arr.findIndex(k => k.equals(buf)) >= 0
 }

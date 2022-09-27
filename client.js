@@ -5,7 +5,15 @@ const fs = require('fs')
 const argv = require('minimist')(process.argv.slice(2))
 const connHandler = require('./lib.js').connHandler
 
-const helpMsg = `Usage:\nhyperproxy -p port_listen -c conf.json`
+const helpMsg = 'Usage:\nhyperproxy -p port_listen -c conf.json [-k keypair.json]'
+
+if (argv.gen_keypair) {
+  const kp = HyperDHT.keyPair()
+  const file = argv.gen_keypair || 'keypair.json'
+  fs.writeFileSync(file, storeKeyPair(kp))
+  console.log('Public Key:', kp.publicKey.toString('hex'))
+  process.exit(-1)
+}
 
 if (argv.help) {
   console.log(helpMsg)
@@ -38,7 +46,9 @@ if (!conf.peer) {
 
 const debug = argv.debug
 
-const dht = new HyperDHT()
+const dht = new HyperDHT({
+  keyPair: argv.k && parseKeyPair(fs.readFileSync(argv.k))
+})
 
 const stats = {}
 
@@ -63,3 +73,18 @@ process.once('SIGINT', () => {
     process.exit()
   })
 })
+
+function parseKeyPair (k) {
+  const kp = JSON.parse(k)
+  return {
+    secretKey: Buffer.from(kp.secretKey, 'hex'),
+    publicKey: Buffer.from(kp.publicKey, 'hex')
+  }
+}
+
+function storeKeyPair (k) {
+  return JSON.stringify({
+    secretKey: k.secretKey.toString('hex'),
+    publicKey: k.publicKey.toString('hex')
+  })
+}

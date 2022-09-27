@@ -5,7 +5,7 @@ const fs = require('fs')
 const argv = require('minimist')(process.argv.slice(2))
 const connHandler = require('./lib.js').connHandler
 
-const helpMsg = 'Usage:\nhyperproxy -p port_listen -c conf.json [-k keypair.json]'
+const helpMsg = 'Usage:\nhyperproxy -p port_listen -c conf.json -k keypair.json -s server_key'
 
 if (argv.gen_keypair) {
   const kp = HyperDHT.keyPair()
@@ -39,8 +39,9 @@ try {
   process.exit(-1)
 }
 
-if (!conf.peer) {
-  console.error('Error: conf.peer invalid')
+const peer = argv.s || conf.peer
+if (!peer) {
+  console.error('Error: peer is invalid')
   process.exit(-1)
 }
 
@@ -55,7 +56,7 @@ const stats = {}
 
 const proxy = net.createServer({ allowHalfOpen: true }, c => {
   return connHandler(c, () => {
-    return dht.connect(Buffer.from(conf.peer, 'hex'))
+    return dht.connect(Buffer.from(peer, 'hex'))
   }, {}, stats)
 })
 
@@ -65,6 +66,7 @@ if (debug) {
   }, 5000)
 }
 
+const keyfile = argv.k || conf.keyfile
 proxy.listen(+argv.p, () => {
   console.log(`Server ready @${argv.p}`)
 })

@@ -56,7 +56,7 @@ const keyPair = HyperDHT.keyPair(seed)
 
 const stats = {}
 
-const server = dht.createServer(c => {
+const server = dht.createServer({ reusableSocket: true }, c => {
   return connHandler(c, () => {
     return net.connect({ port: +argv.l, host: '127.0.0.1', allowHalfOpen: true })
   }, { debug: debug }, stats)

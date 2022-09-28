@@ -14,7 +14,11 @@ hypertele-server --gen_seed
 Create a JSON config file for your server
 ```
 {
-  "seed": "SEED_ABOVE"
+  "seed": "SEED_ABOVE",
+  "allowed": [
+    "REMOTE_PUBLIC_KEY",
+    ...
+  ]
 }
 ```
 
@@ -27,14 +31,26 @@ hypertele-server -l 7001 -c config-server.json
 
 ### client
 
+```
+hypertele --gen_keypair keypair.json
+```
+
 Create a JSON config file for your client
 ```
 {
-  "peer": "PUBKEY_FROM_SERVER"
+  "peer": "PUBKEY_FROM_SERVER",
+  "keyfile": "./keyfile.json"
 }
 ```
 
 ```
 hypertele -p 1337 -c config-client.json
+telnet localhost 1337
+```
+
+A server key can also be specified using `-s` CLI arg. Similarly, keyfile can be passed under `-k` CLI arg.
+
+```
+hypertele -p 1337 -s PUBKEY_FROM_SERVER -k keypair.json
 telnet localhost 1337
 ```

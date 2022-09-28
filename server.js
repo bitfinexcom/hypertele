@@ -47,6 +47,11 @@ if (!conf.seed) {
   process.exit(-1)
 }
 
+let allow = null
+if (conf.allow) {
+  allow = conf.allow.map(pk => Buffer.from(pk, 'hex'))
+}
+
 const debug = argv.debug
 
 const seed = Buffer.from(conf.seed, 'hex')
@@ -58,6 +63,7 @@ const stats = {}
 
 const server = dht.createServer({ reusableSocket: true }, c => {
   return connHandler(c, () => {
+    if (allow !== null && !find(allow, c.remotePublicKey)) return null
     return net.connect({ port: +argv.l, host: '127.0.0.1', allowHalfOpen: true })
   }, { debug: debug }, stats)
 })
@@ -80,4 +86,8 @@ function randomBytes (n) {
   const b = Buffer.alloc(n)
   sodium.randombytes_buf(b)
   return b
+}
+
+function find (arr, buf) {
+  return arr.findIndex(k => k.equals(buf)) >= 0
 }

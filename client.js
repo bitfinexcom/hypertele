@@ -3,14 +3,15 @@ const HyperDHT = require('@hyperswarm/dht')
 const net = require('net')
 const fs = require('fs')
 const argv = require('minimist')(process.argv.slice(2))
-const connHandler = require('./lib.js').connHandler
+const lib = require('./lib.js')
+const connHandler = lib.connHandler
 
-const helpMsg = 'Usage:\nhypertele -p port_listen -c conf.json -k keypair.json -s server_key'
+const helpMsg = 'Usage:\nhypertele -p port_listen -c conf.json -k keypair.json -s peer_key'
 
 if (argv.gen_keypair) {
   const kp = HyperDHT.keyPair()
   const file = argv.gen_keypair || 'keypair.json'
-  fs.writeFileSync(file, storeKeyPair(kp))
+  fs.writeFileSync(file, lib.storeKeyPair(kp))
   console.log('Public Key:', kp.publicKey.toString('hex'))
   process.exit(-1)
 }
@@ -56,7 +57,7 @@ const debug = argv.debug
 
 const keyfile = argv.k || conf.keyfile
 const dht = new HyperDHT({
-  keyPair: keyfile && parseKeyPair(fs.readFileSync(keyfile))
+  keyPair: keyfile && lib.parseKeyPair(fs.readFileSync(keyfile))
 })
 
 const stats = {}
@@ -82,18 +83,3 @@ process.once('SIGINT', () => {
     process.exit()
   })
 })
-
-function parseKeyPair (k) {
-  const kp = JSON.parse(k)
-  return {
-    secretKey: Buffer.from(kp.secretKey, 'hex'),
-    publicKey: Buffer.from(kp.publicKey, 'hex')
-  }
-}
-
-function storeKeyPair (k) {
-  return JSON.stringify({
-    secretKey: k.secretKey.toString('hex'),
-    publicKey: k.publicKey.toString('hex')
-  })
-}

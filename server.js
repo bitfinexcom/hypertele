@@ -1,7 +1,6 @@
 #!/usr/bin/env node
 const HyperDHT = require('@hyperswarm/dht')
 const net = require('net')
-const sodium = require('sodium-universal')
 const fs = require('fs')
 const argv = require('minimist')(process.argv.slice(2))
 const connHandler = require('./lib.js').connHandler
@@ -15,7 +14,7 @@ if (argv.help) {
 }
 
 if (argv.gen_seed) {
-  console.log('Init Seed:', randomBytes(32).toString('hex'))
+  console.log('Init Seed:', lib.randomBytes(32).toString('hex'))
   process.exit(-1)
 }
 
@@ -70,7 +69,7 @@ const stats = {}
 
 const server = dht.createServer({ reusableSocket: true }, c => {
   return connHandler(c, () => {
-    if (allow !== null && !find(allow, c.remotePublicKey)) return null
+    if (allow !== null && !lib.findBuf(allow, c.remotePublicKey)) return null
     return net.connect({ port: +argv.l, host: '127.0.0.1', allowHalfOpen: true })
   }, { debug: debug }, stats)
 })
@@ -88,13 +87,3 @@ if (debug) {
 process.once('SIGINT', function () {
   dht.destroy()
 })
-
-function randomBytes (n) {
-  const b = Buffer.alloc(n)
-  sodium.randombytes_buf(b)
-  return b
-}
-
-function find (arr, buf) {
-  return arr.findIndex(k => k.equals(buf)) >= 0
-}

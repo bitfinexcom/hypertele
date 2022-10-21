@@ -1,4 +1,35 @@
+const sodium = require('sodium-universal')
+
+function parseKeyPair (k) {
+  const kp = JSON.parse(k)
+  return {
+    secretKey: Buffer.from(kp.secretKey, 'hex'),
+    publicKey: Buffer.from(kp.publicKey, 'hex')
+  }
+}
+
+function storeKeyPair (k) {
+  return JSON.stringify({
+    secretKey: k.secretKey.toString('hex'),
+    publicKey: k.publicKey.toString('hex')
+  })
+}
+
+function randomBytes (n) {
+  const b = Buffer.alloc(n)
+  sodium.randombytes_buf(b)
+  return b
+}
+
+function findBuf (arr, buf) {
+  return arr.findIndex(k => k.equals(buf)) >= 0
+}
+
 module.exports = {
+  randomBytes: randomBytes,
+  findBuf: findBuf,
+  parseKeyPair: parseKeyPair,
+  storeKeyPair: storeKeyPair,
   connHandler: (connection, _dst, opts = {}, stats = {}) => {
     const loc = _dst()
     if (loc === null) {

@@ -25,21 +25,28 @@ if (!+argv.p) {
   process.exit(-1)
 }
 
-if (!argv.c) {
-  console.error('Error: conf invalid')
-  process.exit(-1)
+const conf = {}
+
+if (argv.s) {
+  conf.peer = argv.s
 }
 
-let conf = null
+if (argv.c) {
+  let cf = null
 
-try {
-  conf = JSON.parse(fs.readFileSync(argv.c))
-} catch (e) {
-  console.error(e)
-  process.exit(-1)
+  try {
+    cf = JSON.parse(fs.readFileSync(argv.c))
+  } catch (e) {
+    console.error('Error: conf file invalid', e)
+    process.exit(-1)
+  }
+
+  for (const k in cf) {
+    conf[k] = cf[k]
+  }
 }
 
-const peer = argv.s || conf.peer
+const peer = conf.peer
 if (!peer) {
   console.error('Error: peer is invalid')
   process.exit(-1)

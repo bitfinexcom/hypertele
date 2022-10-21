@@ -66,7 +66,6 @@ if (debug) {
   }, 5000)
 }
 
-const keyfile = argv.k || conf.keyfile
 proxy.listen(+argv.p, () => {
   console.log(`Server ready @${argv.p}`)
 })

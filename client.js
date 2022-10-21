@@ -5,7 +5,7 @@ const fs = require('fs')
 const argv = require('minimist')(process.argv.slice(2))
 const connHandler = require('./lib.js').connHandler
 
-const helpMsg = 'Usage:\nhyperproxy -p port_listen -c conf.json -k keypair.json -s server_key'
+const helpMsg = 'Usage:\nhypertele -p port_listen -c conf.json -k keypair.json -s server_key'
 
 if (argv.gen_keypair) {
   const kp = HyperDHT.keyPair()

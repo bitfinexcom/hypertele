@@ -69,7 +69,7 @@ const server = dht.createServer({ reusableSocket: true }, c => {
 })
 
 server.listen(keyPair).then(() => {
-  console.log('hyperproxy:', keyPair.publicKey.toString('hex'))
+  console.log('hypertele:', keyPair.publicKey.toString('hex'))
 })
 
 if (debug) {

@@ -6,8 +6,8 @@ const fs = require('fs')
 const argv = require('minimist')(process.argv.slice(2))
 const connHandler = require('./lib.js').connHandler
 
-const helpMsg = `Usage:\nhyperproxy-server -l port_local -c conf.json ?-k
-hyperproxy-server --gen_seed`
+const helpMsg = `Usage:\nhypertele-server -l port_local -c conf.json ?-k
+hypertele-server --gen_seed`
 
 if (argv.help) {
   console.log(helpMsg)

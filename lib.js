@@ -15,18 +15,14 @@ module.exports = {
 
     if (!stats.locCnt) {
       stats.locCnt = 0
-//      stats.locCntPiped = 0
     }
 
     if (!stats.remCnt) {
       stats.remCnt = 0
-//      stats.remCntPiped = 0
     }
 
     stats.locCnt++
-//    stats.locCntPiped++
     stats.remCnt++
-//    stats.remCntPiped++
 
     let destroyed = false
 

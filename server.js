@@ -69,7 +69,9 @@ const stats = {}
 
 const server = dht.createServer({ reusableSocket: true }, c => {
   return connHandler(c, () => {
-    if (allow !== null && !lib.findBuf(allow, c.remotePublicKey)) return null
+    if (allow !== null && !lib.findBuf(allow, c.remotePublicKey)) {
+      return null
+    }
     return net.connect({ port: +argv.l, host: '127.0.0.1', allowHalfOpen: true })
   }, { debug: debug }, stats)
 })

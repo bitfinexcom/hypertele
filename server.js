@@ -13,11 +13,6 @@ if (argv.help) {
   process.exit(-1)
 }
 
-if (argv.gen_seed) {
-  console.log('Init Seed:', lib.randomBytes(32).toString('hex'))
-  process.exit(-1)
-}
-
 if (!+argv.l) {
   console.error('Error: proxy port invalid')
   process.exit(-1)

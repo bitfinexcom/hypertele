@@ -1,4 +1,6 @@
+const path = require('path')
 const sodium = require('sodium-universal')
+const fs = require('fs')
 
 function parseKeyPair (k) {
   const kp = JSON.parse(k)
@@ -25,7 +27,28 @@ function findBuf (arr, buf) {
   return arr.findIndex(k => k.equals(buf)) >= 0
 }
 
+function resolveToKey(name) {
+  let found = null
+
+  ['./', '~/', '/etc'].forEach(d => {
+    const path = path.join(d, '.hyper-hosts')
+
+    if (!fs.existsSync(path)) {
+      return
+    }
+
+    let data = fs.readFileSync(path)
+
+    found = data.split("\n")
+  })
+
+  return data.filter(l => {
+    return l.startsWith(name)
+  })[0]
+}
+
 module.exports = {
+  resolveToKey: resolveToKey,
   randomBytes: randomBytes,
   findBuf: findBuf,
   parseKeyPair: parseKeyPair,

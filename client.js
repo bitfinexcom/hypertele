@@ -8,14 +8,6 @@ const connHandler = lib.connHandler
 
 const helpMsg = 'Usage:\nhypertele -p port_listen -c conf.json -k keypair.json -s peer_key'
 
-if (argv.gen_keypair) {
-  const kp = HyperDHT.keyPair()
-  const file = argv.gen_keypair || 'keypair.json'
-  fs.writeFileSync(file, lib.storeKeyPair(kp))
-  console.log('Public Key:', kp.publicKey.toString('hex'))
-  process.exit(-1)
-}
-
 if (argv.help) {
   console.log(helpMsg)
   process.exit(-1)

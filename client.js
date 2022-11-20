@@ -3,8 +3,9 @@ const HyperDHT = require('@hyperswarm/dht')
 const net = require('net')
 const fs = require('fs')
 const argv = require('minimist')(process.argv.slice(2))
-const lib = require('./lib.js')
-const connHandler = lib.connHandler
+const libNet = require('@hyper-cmd/lib-net')
+const libKeys = require('@hyper-cmd/lib-keys')
+const connHandler = libNet.connHandler
 
 const helpMsg = 'Usage:\nhypertele -p port_listen -c conf.json -k keypair.json -s peer_key'
 
@@ -49,7 +50,7 @@ const debug = argv.debug
 
 const keyfile = argv.k || conf.keyfile
 const dht = new HyperDHT({
-  keyPair: keyfile && lib.parseKeyPair(fs.readFileSync(keyfile))
+  keyPair: keyfile && libKeys.parseKeyPair(fs.readFileSync(keyfile))
 })
 
 const stats = {}

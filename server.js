@@ -3,10 +3,11 @@ const HyperDHT = require('@hyperswarm/dht')
 const net = require('net')
 const fs = require('fs')
 const argv = require('minimist')(process.argv.slice(2))
-const connHandler = require('./lib.js').connHandler
+const libNet = require('@hyper-cmd/lib-net')
+const libKeys = require('@hyper-cmd/lib-keys')
+const connHandler = libNet.connHandler
 
-const helpMsg = `Usage:\nhypertele-server -l port_local ?-c conf.json ?--seed seed ?--cert-skip
-hypertele-server --gen_seed`
+const helpMsg = `Usage:\nhypertele-server -l port_local ?-c conf.json ?--seed seed ?--cert-skip`
 
 if (argv.help) {
   console.log(helpMsg)

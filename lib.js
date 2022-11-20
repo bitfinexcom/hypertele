@@ -1,10 +1,6 @@
 const path = require('path')
 const fs = require('fs')
 
-function findBuf (arr, buf) {
-  return arr.findIndex(k => k.equals(buf)) >= 0
-}
-
 function resolveToKey(name) {
   let found = null
 
@@ -26,5 +22,4 @@ function resolveToKey(name) {
 }
 
 module.exports = {
-  findBuf: findBuf
 }

@@ -49,9 +49,8 @@ if (!conf.seed) {
   process.exit(-1)
 }
 
-let allow = null
 if (conf.allow) {
-  allow = conf.allow.map(pk => Buffer.from(pk, 'hex'))
+  allow = libKeys.prepKeyLkist(conf.allow)
 }
 
 const debug = argv.debug
@@ -65,9 +64,10 @@ const stats = {}
 
 const server = dht.createServer({ reusableSocket: true }, c => {
   return connHandler(c, () => {
-    if (allow !== null && !lib.findBuf(allow, c.remotePublicKey)) {
+    if (conf.allow && libKeys.checkAllowList(conf.allow, c.remotePublicKey)) {
       return null
     }
+
     return net.connect({ port: +argv.l, host: '127.0.0.1', allowHalfOpen: true })
   }, { debug: debug }, stats)
 })

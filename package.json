@@ -1,10 +1,10 @@
 {
   "name": "hypertele",
-  "version": "1.0.31",
+  "version": "1.0.32",
   "description": "TCP proxy over Hyperswarm!",
   "main": "index.js",
   "dependencies": {
-    "@hyperswarm/dht": "^6.2.0",
+    "@hyperswarm/dht": "^6.3.2",
     "@hyper-cmd/lib-net": "https://github.com/prdn/hyper-cmd-lib-net",
     "@hyper-cmd/lib-keys": "https://github.com/prdn/hyper-cmd-lib-keys",
     "@hyper-cmd/lib-utils": "https://github.com/prdn/hyper-cmd-lib-utils",

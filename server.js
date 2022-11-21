@@ -40,7 +40,7 @@ if (!conf.seed) {
 }
 
 if (conf.allow) {
-  allow = libKeys.prepKeyLkist(conf.allow)
+  conf.allow = libKeys.prepKeyList(conf.allow)
 }
 
 const debug = argv.debug
@@ -54,7 +54,7 @@ const stats = {}
 
 const server = dht.createServer({ reusableSocket: true }, c => {
   return connHandler(c, () => {
-    if (conf.allow && libKeys.checkAllowList(conf.allow, c.remotePublicKey)) {
+    if (conf.allow && !libKeys.checkAllowList(conf.allow, c.remotePublicKey)) {
       return null
     }
 

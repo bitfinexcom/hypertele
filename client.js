@@ -8,7 +8,7 @@ const libUtils = require('@hyper-cmd/lib-utils')
 const libKeys = require('@hyper-cmd/lib-keys')
 const connHandler = libNet.connHandler
 
-const helpMsg = 'Usage:\nhypertele -p port_listen -c conf.json -k keypair.json -s peer_key'
+const helpMsg = 'Usage:\nhypertele -p port_listen -c conf.json -i identity.json -s peer_key'
 
 if (argv.help) {
   console.log(helpMsg)
@@ -23,7 +23,7 @@ if (!+argv.p) {
 const conf = {}
 
 if (argv.s) {
-  conf.peer = argv.s
+  conf.peer = libUtils.resolveHostToKey([], argv.s)
 }
 
 if (argv.c) {
@@ -38,9 +38,20 @@ if (!peer) {
 
 const debug = argv.debug
 
-const keyfile = argv.k || conf.keyfile
+let keyPair = null
+if (argv.i) {
+  keyPair = libUtils.resolveIdentity([], argv.i)
+
+  if (!keyPair) {
+    console.error('Error: identity file invalid')
+    process.exit(-1)
+  }
+
+  keyPair = libKeys.parseKeyPair(keyPair)
+}
+
 const dht = new HyperDHT({
-  keyPair: keyfile && libKeys.parseKeyPair(fs.readFileSync(keyfile))
+  keyPair: keyPair
 })
 
 const stats = {}

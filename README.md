@@ -7,7 +7,7 @@
 hypertele-server --help
 ```
 
-Create a JSON config file for your server
+# Create a JSON config file for your server
 ```
 {
   "seed": "SEED",
@@ -18,11 +18,16 @@ Create a JSON config file for your server
 }
 ```
 
+# -l PORT : port of the local service you want to expose to the peers
 ```
-# -l 7001 <---- port of the local service you want to expose to the swarm
 hypertele-server -l 7001 -c config-server.json
-# the command will print out the pubkey
 ```
+
+# --seed SEED : seed (command-line)
+
+--cert-skip : skip certificate check when connecting to local service 
+
+# the command will print out the pubkey
 
 
 ### client
@@ -39,9 +44,8 @@ hypertele -p 1337 -c config-client.json
 telnet localhost 1337
 ```
 
-A server key can also be specified using `-s` CLI arg. Similarly, identity can be passed under `-i` CLI arg.
+# -i keypair.json : keypair file
 
 ```
 hypertele -p 1337 -s PUBKEY_FROM_SERVER -i keypair.json
-telnet localhost 1337
 ```

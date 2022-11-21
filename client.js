@@ -8,7 +8,7 @@ const libUtils = require('@hyper-cmd/lib-utils')
 const libKeys = require('@hyper-cmd/lib-keys')
 const connHandler = libNet.connHandler
 
-const helpMsg = 'Usage:\nhypertele -p port_listen -c conf.json -i identity.json -s peer_key'
+const helpMsg = 'Usage:\nhypertele -p port_listen ?-c conf.json ?-i identity.json ?-s peer_key'
 
 if (argv.help) {
   console.log(helpMsg)

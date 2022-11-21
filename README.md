@@ -1,38 +1,50 @@
 # hypertele
 
 
-### server
+## server
 
 ```
 hypertele-server --help
 ```
 
-# Create a JSON config file for your server
+**Create a JSON config file for your server**
 ```
 {
   "seed": "SEED",
   "allowed": [
-    "REMOTE_PUBLIC_KEY",
+    "CLIENT_PEER_KEY",
     ...
   ]
 }
 ```
 
-# -l PORT : port of the local service you want to expose to the peers
 ```
-hypertele-server -l 7001 -c config-server.json
-```
+options:
 
-# --seed SEED : seed (command-line)
-
+-l PORT : port of the local service you want to expose to the peers
 --cert-skip : skip certificate check when connecting to local service 
+--seed SEED : seed (command-line)
+```
 
-# the command will print out the pubkey
+```
+examples:
+
+hypertele-server -l 22 -c config-server.json
+hypertele-server -l 22 --seed XXX
+```
+
+Note: the command will print out the pubkey
 
 
-### client
 
-Create a JSON config file for your client
+
+## client
+
+```
+hypertele --help
+```
+
+**Create a JSON config file for your client**
 ```
 {
   "peer": "SERVER_PEER_KEY"
@@ -40,12 +52,18 @@ Create a JSON config file for your client
 ```
 
 ```
+options:
+
+-s SERVER_PEER_KEY : server peer key (command-line)
+-i keypair.json : keypair file
+```
+
+```
+examples:
+
 hypertele -p 1337 -c config-client.json
-telnet localhost 1337
-```
-
-# -i keypair.json : keypair file
-
-```
 hypertele -p 1337 -s PUBKEY_FROM_SERVER -i keypair.json
+
+and...
+telnet localhost 1337
 ```

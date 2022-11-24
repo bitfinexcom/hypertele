@@ -19,7 +19,7 @@
     "type": "git",
     "url": "https://github.com/bitfinexcom/hypertele.git"
   },
-  "author": "Paolo Ardoino (@bitfinexcom)",
+  "author": "Paolo Ardoino (@prdn)",
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/bitfinexcom/hypertele/issues"

@@ -1,7 +1,8 @@
 # hypertele
 
+A swiss-knife proxy powered by hyperswarm
 
-## server
+## Server
 
 ```
 hypertele-server --help
@@ -38,7 +39,7 @@ Note: the command will print out the pubkey
 
 
 
-## client
+## Client
 
 ```
 hypertele --help

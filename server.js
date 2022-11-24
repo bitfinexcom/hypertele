@@ -6,7 +6,7 @@ const argv = require('minimist')(process.argv.slice(2))
 const libNet = require('@hyper-cmd/lib-net')
 const libUtils = require('@hyper-cmd/lib-utils')
 const libKeys = require('@hyper-cmd/lib-keys')
-const connHandler = libNet.connHandler
+const connPiper = libNet.connPiper
 
 const helpMsg = `Usage:\nhypertele-server -l port_local ?-c conf.json ?--seed seed ?--cert-skip`
 
@@ -52,12 +52,17 @@ const keyPair = HyperDHT.keyPair(seed)
 
 const stats = {}
 
-const server = dht.createServer({ reusableSocket: true }, c => {
-  return connHandler(c, () => {
-    if (conf.allow && !libKeys.checkAllowList(conf.allow, c.remotePublicKey)) {
-      return null
+const server = dht.createServer({
+  firewall: (remotePublicKey, remoteHandshakePayload)=> {
+    if (conf.allow && !libKeys.checkAllowList(conf.allow, remotePublicKey)) {
+      return true
     }
 
+    return false
+  },
+  reusableSocket: true
+}, c => {
+  const ops = connPiper(c, () => {
     return net.connect({ port: +argv.l, host: '127.0.0.1', allowHalfOpen: true })
   }, { debug: debug }, stats)
 })

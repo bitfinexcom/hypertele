@@ -6,7 +6,7 @@ const argv = require('minimist')(process.argv.slice(2))
 const libNet = require('@hyper-cmd/lib-net')
 const libUtils = require('@hyper-cmd/lib-utils')
 const libKeys = require('@hyper-cmd/lib-keys')
-const connHandler = libNet.connHandler
+const connPiper = libNet.connPiper
 
 const helpMsg = 'Usage:\nhypertele -p port_listen ?-c conf.json ?-i identity.json ?-s peer_key'
 
@@ -57,7 +57,7 @@ const dht = new HyperDHT({
 const stats = {}
 
 const proxy = net.createServer({ allowHalfOpen: true }, c => {
-  return connHandler(c, () => {
+  return connPiper(c, () => {
     return dht.connect(Buffer.from(peer, 'hex'), { reusableSocket: true })
   }, {}, stats)
 })

@@ -4,6 +4,8 @@ A swiss-knife proxy powered by hyperswarm
 
 ## Server
 
+Standard pipe server
+
 ```
 hypertele-server --help
 ```
@@ -37,6 +39,40 @@ hypertele-server -l 22 --seed XXX
 Note: the command will print out the pubkey
 
 
+## Pub
+
+Pub server
+
+```
+hypertele-pub --help
+```
+
+**Create a JSON config file for your server**
+```
+{
+  "seed": "SEED",
+  "allowed": [
+    "CLIENT_PEER_KEY",
+    ...
+  ]
+}
+```
+
+```
+options:
+
+-l PORT : port of the local service you want to expose to the peers
+--seed SEED : seed (command-line)
+```
+
+```
+examples:
+
+hypertele-server -l 5555 -c config-server.json
+hypertele-server -l 5555 --seed XXX
+```
+
+Note: the command will print out the pubkey
 
 
 ## Client

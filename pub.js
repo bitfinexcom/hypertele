@@ -57,7 +57,6 @@ const local = net.createServer((socket) => {
   socket.on('data', d => {
     const cids = Object.keys(clients)
 
-    console.log('sending data to', cids)
     cids.forEach(cid => {
       const c = clients[cid]
       c.send(d)

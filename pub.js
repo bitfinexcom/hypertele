@@ -81,7 +81,6 @@ const server = dht.createServer({
 
   const ops = connRemoteCtrl(c, {
     onDestroy: () => {
-      console.log('disconnecting', cid)
       delete clients[cid]
     },
     debug: debug

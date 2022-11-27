@@ -50,16 +50,16 @@ const seed = Buffer.from(conf.seed, 'hex')
 const dht = new HyperDHT()
 const keyPair = HyperDHT.keyPair(seed)
 
-const stats = {}
+const stats = { cid: 0 }
 const clients = {}
 
 const local = net.createServer((socket) => {
   socket.on('data', d => {
-    const rks = Object.keys(clients)
+    const cids = Object.keys(clients)
 
-    console.log('sending data to', rks)
-    rks.forEach(rk => {
-      const c = clients[rk]
+    console.log('sending data to', cids)
+    cids.forEach(cid => {
+      const c = clients[cid]
       c.send(d)
     })
   }) 
@@ -77,15 +77,17 @@ const server = dht.createServer({
   },
   reusableSocket: true
 }, c => {
-  const rk = c.remotePublicKey
+  const cid = stats.cid++
+
   const ops = connRemoteCtrl(c, {
     onDestroy: () => {
-      delete clients[rk]
+      console.log('disconnecting', cid)
+      delete clients[cid]
     },
     debug: debug
   }, stats)
 
-  clients[rk] = ops
+  clients[cid] = ops
 })
 
 server.listen(keyPair).then(() => {

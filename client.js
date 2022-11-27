@@ -50,16 +50,23 @@ if (argv.i) {
   keyPair = libKeys.parseKeyPair(keyPair)
 }
 
-const dht = new HyperDHT({
-  keyPair: keyPair
-})
-
 const stats = {}
+const clients = {}
 
 const proxy = net.createServer({ allowHalfOpen: true }, c => {
   return connPiper(c, () => {
+    const dht = new HyperDHT({
+      keyPair: keyPair
+    })
+
+    clients[dht.publicKey] = dht
+
     return dht.connect(Buffer.from(peer, 'hex'), { reusableSocket: true })
-  }, {}, stats)
+  }, {
+    onDestroy: () => {
+      delete clients[rk]
+    }
+  }, stats)
 })
 
 if (debug) {
@@ -73,7 +80,13 @@ proxy.listen(+argv.p, () => {
 })
 
 process.once('SIGINT', () => {
-  dht.destroy().then(() => {
-    process.exit()
+  const cks = Object.keys(clients)
+
+  cks.forEach(ck => {
+    const dht = clients[ck]
+
+    dht.destroy()
   })
+
+  process.exit()
 })

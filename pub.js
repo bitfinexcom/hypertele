@@ -51,14 +51,13 @@ const dht = new HyperDHT()
 const keyPair = HyperDHT.keyPair(seed)
 
 const stats = {}
-const clients = {
-
-}
+const clients = {}
 
 const local = net.createServer((socket) => {
   socket.on('data', d => {
     const rks = Object.keys(clients)
 
+    console.log('sending data to', rks)
     rks.forEach(rk => {
       const c = clients[rk]
       c.send(d)

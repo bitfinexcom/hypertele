@@ -1,7 +1,6 @@
 #!/usr/bin/env node
 const HyperDHT = require('@hyperswarm/dht')
 const net = require('net')
-const fs = require('fs')
 const argv = require('minimist')(process.argv.slice(2))
 const libNet = require('@hyper-cmd/lib-net')
 const libUtils = require('@hyper-cmd/lib-utils')
@@ -53,7 +52,7 @@ if (argv.i) {
 const stats = {}
 
 const dht = new HyperDHT({
-  keyPair: keyPair
+  keyPair
 })
 
 const proxy = net.createServer({ allowHalfOpen: true }, c => {

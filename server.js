@@ -1,14 +1,13 @@
 #!/usr/bin/env node
 const HyperDHT = require('@hyperswarm/dht')
 const net = require('net')
-const fs = require('fs')
 const argv = require('minimist')(process.argv.slice(2))
 const libNet = require('@hyper-cmd/lib-net')
 const libUtils = require('@hyper-cmd/lib-utils')
 const libKeys = require('@hyper-cmd/lib-keys')
 const connPiper = libNet.connPiper
 
-const helpMsg = `Usage:\nhypertele-server -l port_local ?-c conf.json ?--seed seed ?--cert-skip`
+const helpMsg = 'Usage:\nhypertele-server -l port_local ?-c conf.json ?--seed seed ?--cert-skip'
 
 if (argv.help) {
   console.log(helpMsg)
@@ -31,7 +30,7 @@ if (argv.c) {
 }
 
 if (argv['cert-skip']) {
-  process.env['NODE_TLS_REJECT_UNAUTHORIZED'] = 0
+  process.env.NODE_TLS_REJECT_UNAUTHORIZED = 0
 }
 
 if (!conf.seed) {
@@ -53,7 +52,7 @@ const keyPair = HyperDHT.keyPair(seed)
 const stats = {}
 
 const server = dht.createServer({
-  firewall: (remotePublicKey, remoteHandshakePayload)=> {
+  firewall: (remotePublicKey, remoteHandshakePayload) => {
     if (conf.allow && !libKeys.checkAllowList(conf.allow, remotePublicKey)) {
       return true
     }
@@ -62,9 +61,9 @@ const server = dht.createServer({
   },
   reusableSocket: true
 }, c => {
-  const ops = connPiper(c, () => {
+  connPiper(c, () => {
     return net.connect({ port: +argv.l, host: '127.0.0.1', allowHalfOpen: true })
-  }, { debug: debug }, stats)
+  }, { debug }, stats)
 })
 
 server.listen(keyPair).then(() => {

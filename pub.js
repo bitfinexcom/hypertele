@@ -1,14 +1,13 @@
 #!/usr/bin/env node
 const HyperDHT = require('@hyperswarm/dht')
 const net = require('net')
-const fs = require('fs')
 const argv = require('minimist')(process.argv.slice(2))
 const libNet = require('@hyper-cmd/lib-net')
 const libUtils = require('@hyper-cmd/lib-utils')
 const libKeys = require('@hyper-cmd/lib-keys')
 const connRemoteCtrl = libNet.connRemoteCtrl
 
-const helpMsg = `Usage:\nhypertele-pub -l port_local ?-c conf.json ?--seed seed`
+const helpMsg = 'Usage:\nhypertele-pub -l port_local ?-c conf.json ?--seed seed'
 
 if (argv.help) {
   console.log(helpMsg)
@@ -31,7 +30,7 @@ if (argv.c) {
 }
 
 if (argv['cert-skip']) {
-  process.env['NODE_TLS_REJECT_UNAUTHORIZED'] = 0
+  process.env.NODE_TLS_REJECT_UNAUTHORIZED = 0
 }
 
 if (!conf.seed) {
@@ -61,13 +60,13 @@ const local = net.createServer((socket) => {
       const c = clients[cid]
       c.send(d)
     })
-  }) 
+  })
 })
 
 local.listen(+argv.l, '0.0.0.0')
 
 const server = dht.createServer({
-  firewall: (remotePublicKey, remoteHandshakePayload)=> {
+  firewall: (remotePublicKey, remoteHandshakePayload) => {
     if (conf.allow && !libKeys.checkAllowList(conf.allow, remotePublicKey)) {
       return true
     }
@@ -82,7 +81,7 @@ const server = dht.createServer({
     onDestroy: () => {
       delete clients[cid]
     },
-    debug: debug
+    debug
   }, stats)
 
   clients[cid] = ops

@@ -6,7 +6,7 @@ A swiss-knife proxy powered by hyperswarm
 
 Standard pipe server
 
-```
+```sh
 hypertele-server --help
 ```
 
@@ -29,7 +29,7 @@ options:
 --seed SEED : seed (command-line)
 ```
 
-```
+```sh
 examples:
 
 hypertele-server -l 22 -c config-server.json
@@ -43,7 +43,7 @@ Note: the command will print out the pubkey
 
 Pub server
 
-```
+```sh
 hypertele-pub --help
 ```
 
@@ -65,7 +65,7 @@ options:
 --seed SEED : seed (command-line)
 ```
 
-```
+```sh
 examples:
 
 hypertele-server -l 5555 -c config-server.json
@@ -77,7 +77,7 @@ Note: the command will print out the pubkey
 
 ## Client
 
-```
+```sh
 hypertele --help
 ```
 
@@ -95,7 +95,7 @@ options:
 -i keypair.json : keypair file
 ```
 
-```
+```sh
 examples:
 
 hypertele -p 1337 -c config-client.json

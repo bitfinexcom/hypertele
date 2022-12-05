@@ -1,6 +1,6 @@
 # hypertele
 
-A swiss-knife proxy powered by hyperswarm
+A swiss-knife proxy powered by [Hyperswarm DHT](https://github.com/hyperswarm/dht)!
 
 ## Server
 

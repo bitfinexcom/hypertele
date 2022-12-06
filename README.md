@@ -116,6 +116,7 @@ telnet localhost 1337
 ## The hyper-cmd system
 
 hypertele supports the hyper-cmd system!
+
 Identity management: https://github.com/prdn/hyper-cmd-docs/blob/main/identity.md
 
 Host resolution: https://github.com/prdn/hyper-cmd-docs/blob/main/resolve.md

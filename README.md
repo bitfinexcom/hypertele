@@ -68,8 +68,8 @@ options:
 ```sh
 examples:
 
-hypertele-server -l 5555 -c config-server.json
-hypertele-server -l 5555 --seed XXX
+hypertele-pub -l 5555 -c config-server.json
+hypertele-pub -l 5555 --seed XXX
 ```
 
 Note: the command will print out the pubkey
@@ -95,6 +95,8 @@ options:
 -i keypair.json : keypair file
 ```
 
+Read more about using identities here: https://github.com/prdn/hyper-cmd-docs/blob/main/identity.md
+
 ```sh
 examples:
 
@@ -105,7 +107,8 @@ and...
 telnet localhost 1337
 ```
 
-### System
+### The hyper-cmd system
 
-Read more about hypertele system hooks and utilities here (host and identity path resolution, ...)
-https://github.com/bitfinexcom/hypertele/blob/main/SYSTEM.md
+hypertele supports the hyper-cmd system!
+Identity management: https://github.com/prdn/hyper-cmd-docs/blob/main/identity.md
+Host resolution: https://github.com/prdn/hyper-cmd-docs/blob/main/resolve.md

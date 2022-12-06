@@ -105,5 +105,7 @@ and...
 telnet localhost 1337
 ```
 
+### System
+
 Read more about hypertele system hooks and utilities here (host and identity path resolution, ...)
 https://github.com/bitfinexcom/hypertele/blob/main/SYSTEM.md

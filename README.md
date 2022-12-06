@@ -2,6 +2,12 @@
 
 A swiss-knife proxy powered by [Hyperswarm DHT](https://github.com/hyperswarm/dht)!
 
+## Installation
+```
+npm install -g hypertele // hyperswarm server proxy
+npm install -g hyper-cmd-utils // keygen utils
+```
+
 ## Server
 
 Standard pipe server

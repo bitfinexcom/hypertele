@@ -104,3 +104,6 @@ hypertele -p 1337 -s PUBKEY_FROM_SERVER -i keypair.json
 and...
 telnet localhost 1337
 ```
+
+Read more about hypertele system hooks and utilities here (host and identity path resolution, ...)
+https://github.com/bitfinexcom/hypertele/blob/main/SYSTEM.md

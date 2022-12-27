@@ -25,6 +25,10 @@ if (argv.seed) {
   conf.seed = argv.seed
 }
 
+if (argv.compress) {
+  conf.compress = true
+}
+
 if (argv.c) {
   libUtils.readConf(conf, argv.c)
 }
@@ -63,7 +67,7 @@ const server = dht.createServer({
 }, c => {
   connPiper(c, () => {
     return net.connect({ port: +argv.l, host: '127.0.0.1', allowHalfOpen: true })
-  }, { debug }, stats)
+  }, { debug, isServer: true, compress: conf.compress }, stats)
 })
 
 server.listen(keyPair).then(() => {

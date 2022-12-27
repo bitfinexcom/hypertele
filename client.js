@@ -29,6 +29,10 @@ if (argv.c) {
   libUtils.readConf(conf, argv.c)
 }
 
+if (argv.compress) {
+  conf.compress = true
+}
+
 const peer = conf.peer
 if (!peer) {
   console.error('Error: peer is invalid')
@@ -58,7 +62,7 @@ const dht = new HyperDHT({
 const proxy = net.createServer({ allowHalfOpen: true }, c => {
   return connPiper(c, () => {
     return dht.connect(Buffer.from(peer, 'hex'), { reusableSocket: true })
-  }, {}, stats)
+  }, { compress: conf.compress }, stats)
 })
 
 if (debug) {

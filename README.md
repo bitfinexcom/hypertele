@@ -33,6 +33,7 @@ options:
 -l PORT : port of the local service you want to expose to the peers
 --cert-skip : skip certificate check when connecting to local service 
 --seed SEED : seed (command-line)
+--compress : enable chunk compression
 ```
 
 ```sh
@@ -69,6 +70,7 @@ options:
 
 -l PORT : port of the local service you want to expose to the peers
 --seed SEED : seed (command-line)
+--compress : enable chunk compression
 ```
 
 ```sh
@@ -99,6 +101,7 @@ options:
 
 -s SERVER_PEER_KEY : server peer key (command-line)
 -i keypair.json : keypair file
+--compress : enable chunk compression
 ```
 
 Read more about using identities here: https://github.com/prdn/hyper-cmd-docs/blob/main/identity.md

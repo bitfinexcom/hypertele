@@ -25,12 +25,12 @@ if (argv.seed) {
   conf.seed = argv.seed
 }
 
-if (argv.compress) {
-  conf.compress = true
-}
-
 if (argv.c) {
   libUtils.readConf(conf, argv.c)
+}
+
+if (argv.compress) {
+  conf.compress = true
 }
 
 if (argv['cert-skip']) {

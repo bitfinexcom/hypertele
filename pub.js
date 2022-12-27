@@ -29,6 +29,10 @@ if (argv.c) {
   libUtils.readConf(conf, argv.c)
 }
 
+if (argv.compress) {
+  conf.compress = true
+}
+
 if (argv['cert-skip']) {
   process.env.NODE_TLS_REJECT_UNAUTHORIZED = 0
 }
@@ -81,7 +85,9 @@ const server = dht.createServer({
     onDestroy: () => {
       delete clients[cid]
     },
-    debug
+    debug,
+    isServer: true,
+    compress: conf.compress
   }, stats)
 
   clients[cid] = ops

@@ -29,6 +29,10 @@ if (argv.c) {
   libUtils.readConf(conf, argv.c)
 }
 
+if (!conf.keepAlive) {
+  conf.keepAlive = 5000
+}
+
 if (argv.compress) {
   conf.compress = true
 }
@@ -61,7 +65,10 @@ const dht = new HyperDHT({
 
 const proxy = net.createServer({ allowHalfOpen: true }, c => {
   return connPiper(c, () => {
-    return dht.connect(Buffer.from(peer, 'hex'), { reusableSocket: true })
+    const stream = dht.connect(Buffer.from(peer, 'hex'), { reusableSocket: true })
+    stream.setKeepAlive(conf.keepAlive)
+
+    return stream
   }, { compress: conf.compress }, stats)
 })
 

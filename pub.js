@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-const HyperDHT = require('@hyperswarm/dht')
+const HyperDHT = require('hyperdht')
 const net = require('net')
 const argv = require('minimist')(process.argv.slice(2))
 const libNet = require('@hyper-cmd/lib-net')

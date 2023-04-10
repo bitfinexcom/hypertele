@@ -7,15 +7,20 @@ const libUtils = require('@hyper-cmd/lib-utils')
 const libKeys = require('@hyper-cmd/lib-keys')
 const connPiper = libNet.connPiper
 
-const helpMsg = 'Usage:\nhypertele-server -l port_local ?-c conf.json ?--seed seed ?--cert-skip'
+const helpMsg = 'Usage:\nhypertele-server -l port_local -u unix_socket ?-c conf.json ?--seed seed ?--cert-skip'
 
 if (argv.help) {
   console.log(helpMsg)
   process.exit(-1)
 }
 
-if (!+argv.l) {
+if (!argv.u && !+argv.l) {
   console.error('Error: proxy port invalid')
+  process.exit(-1)
+}
+
+if (argv.u && argv.l) {
+  console.error('Error: cannot listen to both a port and a Unix domain socket')
   process.exit(-1)
 }
 
@@ -66,7 +71,11 @@ const server = dht.createServer({
   reusableSocket: true
 }, c => {
   connPiper(c, () => {
-    return net.connect({ port: +argv.l, host: '127.0.0.1', allowHalfOpen: true })
+    return net.connect(
+      argv.u
+        ? { path: argv.u }
+        : { port: +argv.l, host: '127.0.0.1', allowHalfOpen: true }
+    )
   }, { debug, isServer: true, compress: conf.compress }, stats)
 })
 

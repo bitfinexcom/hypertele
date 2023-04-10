@@ -7,19 +7,25 @@ const libUtils = require('@hyper-cmd/lib-utils')
 const libKeys = require('@hyper-cmd/lib-keys')
 const connPiper = libNet.connPiper
 
-const helpMsg = 'Usage:\nhypertele -p port_listen ?-c conf.json ?-i identity.json ?-s peer_key'
+const helpMsg = 'Usage:\nhypertele -p port_listen -u unix_socket ?-c conf.json ?-i identity.json ?-s peer_key'
 
 if (argv.help) {
   console.log(helpMsg)
   process.exit(-1)
 }
 
-if (!+argv.p) {
+if (!argv.u && !+argv.p) {
   console.error('Error: proxy port invalid')
   process.exit(-1)
 }
 
+if (argv.u && argv.p) {
+  console.error('Error: cannot listen to both a port and a Unix domain socket')
+  process.exit(-1)
+}
 const conf = {}
+
+const target = argv.u ? argv.u : +argv.p
 
 if (argv.s) {
   conf.peer = libUtils.resolveHostToKey([], argv.s)
@@ -78,8 +84,8 @@ if (debug) {
   }, 5000)
 }
 
-proxy.listen(+argv.p, () => {
-  console.log(`Server ready @${argv.p}`)
+proxy.listen(target, () => {
+  console.log(`Server ready @${target}`)
 })
 
 process.once('SIGINT', () => {

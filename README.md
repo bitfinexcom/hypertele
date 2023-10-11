@@ -69,7 +69,7 @@ hypertele-pub --help
 ```
 options:
 
--l PORT : port of theservice you want to expose to the peers
+-l PORT : port of the service you want to expose to the peers
 --address ADDRESS : IP of the service you want to expose to the peers
 --seed SEED : seed (command-line)
 --compress : enable chunk compression

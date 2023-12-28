@@ -5,6 +5,7 @@ const argv = require('minimist')(process.argv.slice(2))
 const libNet = require('@hyper-cmd/lib-net')
 const libUtils = require('@hyper-cmd/lib-utils')
 const libKeys = require('@hyper-cmd/lib-keys')
+const goodbye = require('graceful-goodbye')
 const connPiper = libNet.connPiper
 
 const helpMsg = 'Usage:\nhypertele -p port_listen -u unix_socket ?-c conf.json ?-i identity.json ?-s peer_key'
@@ -88,8 +89,6 @@ proxy.listen(target, () => {
   console.log(`Server ready @${target}`)
 })
 
-process.once('SIGINT', () => {
-  dht.destroy().then(() => {
-    process.exit()
-  })
+goodbye(async () => {
+  await dht.destroy()
 })

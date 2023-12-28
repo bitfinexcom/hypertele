@@ -5,6 +5,7 @@ const argv = require('minimist')(process.argv.slice(2))
 const libNet = require('@hyper-cmd/lib-net')
 const libUtils = require('@hyper-cmd/lib-utils')
 const libKeys = require('@hyper-cmd/lib-keys')
+const goodbye = require('graceful-goodbye')
 const connRemoteCtrl = libNet.connRemoteCtrl
 
 const helpMsg = 'Usage:\nhypertele-pub -l port_local ?-c conf.json ?--seed seed'
@@ -103,6 +104,9 @@ if (debug) {
   }, 5000)
 }
 
-process.once('SIGINT', function () {
-  dht.destroy()
+goodbye(async () => {
+  await new Promise(resolve => {
+    local.close(resolve)
+  })
+  await dht.destroy()
 })

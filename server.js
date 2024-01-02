@@ -5,6 +5,7 @@ const argv = require('minimist')(process.argv.slice(2))
 const libNet = require('@hyper-cmd/lib-net')
 const libUtils = require('@hyper-cmd/lib-utils')
 const libKeys = require('@hyper-cmd/lib-keys')
+const goodbye = require('graceful-goodbye')
 const connPiper = libNet.connPiper
 
 const helpMsg = 'Usage:\nhypertele-server -l service_port -u unix_socket ?--address service_address ?-c conf.json ?--seed seed ?--cert-skip'
@@ -91,6 +92,6 @@ if (debug) {
   }, 5000)
 }
 
-process.once('SIGINT', function () {
-  dht.destroy()
+goodbye(async () => {
+  await dht.destroy()
 })

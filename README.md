@@ -20,7 +20,7 @@ hypertele-server --help
 ```
 {
   "seed": "SEED",
-  "allowed": [
+  "allow": [
     "CLIENT_PEER_KEY",
     ...
   ]
@@ -59,7 +59,7 @@ hypertele-pub --help
 ```
 {
   "seed": "SEED",
-  "allowed": [
+  "allow": [
     "CLIENT_PEER_KEY",
     ...
   ]

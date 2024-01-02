@@ -8,7 +8,7 @@ const libKeys = require('@hyper-cmd/lib-keys')
 const goodbye = require('graceful-goodbye')
 const connPiper = libNet.connPiper
 
-const helpMsg = 'Usage:\nhypertele -p port_listen -u unix_socket ?-c conf.json ?-i identity.json ?-s peer_key'
+const helpMsg = 'Usage:\nhypertele -p port_listen -u unix_socket ?--address service_address ?-c conf.json ?-i identity.json ?-s peer_key'
 
 if (argv.help) {
   console.log(helpMsg)
@@ -85,9 +85,16 @@ if (debug) {
   }, 5000)
 }
 
-proxy.listen(target, () => {
-  console.log(`Server ready @${target}`)
-})
+if (argv.u) {
+  proxy.listen(target, () => {
+    console.log(`Server ready @${target}`)
+  })
+} else {
+  const targetHost = argv.address || '127.0.0.1'
+  proxy.listen(target, targetHost, () => {
+    console.log(`Server ready @${targetHost}:${target}`)
+  })
+}
 
 goodbye(async () => {
   await dht.destroy()

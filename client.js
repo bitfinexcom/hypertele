@@ -2,13 +2,14 @@
 const HyperDHT = require('hyperdht')
 const net = require('net')
 const argv = require('minimist')(process.argv.slice(2))
+const b4a = require('b4a')
 const libNet = require('@hyper-cmd/lib-net')
 const libUtils = require('@hyper-cmd/lib-utils')
 const libKeys = require('@hyper-cmd/lib-keys')
 const goodbye = require('graceful-goodbye')
 const connPiper = libNet.connPiper
 
-const helpMsg = 'Usage:\nhypertele -p port_listen -u unix_socket ?--address service_address ?-c conf.json ?-i identity.json ?-s peer_key'
+const helpMsg = 'Usage:\nhypertele -p port_listen -u unix_socket ?--address service_address ?-c conf.json ?-i identity.json ?-s peer_key ?--private'
 
 if (argv.help) {
   console.log(helpMsg)
@@ -28,9 +29,29 @@ const conf = {}
 
 const target = argv.u ? argv.u : +argv.p
 
-if (argv.s) {
-  conf.peer = libUtils.resolveHostToKey([], argv.s)
+let keyPair = null
+if (argv.i) {
+  keyPair = libUtils.resolveIdentity([], argv.i)
+
+  if (!keyPair) {
+    console.error('Error: identity file invalid')
+    process.exit(-1)
+  }
+
+  keyPair = libKeys.parseKeyPair(keyPair)
 }
+
+conf.private = argv.private != null
+if (conf.private) {
+  if (keyPair != null) throw new Error('The --private flag is not compatible with the -i(dentity) flag, since the identity is derived from the peer key')
+  const seed = argv.s
+  keyPair = HyperDHT.keyPair(b4a.from(seed, 'hex'))
+}
+
+if (argv.s) {
+  conf.peer = conf.private
+    ? keyPair.publicKey
+    : libUtils.resolveHostToKey([], argv.s)}
 
 if (argv.c) {
   libUtils.readConf(conf, argv.c)
@@ -51,18 +72,6 @@ if (!peer) {
 }
 
 const debug = argv.debug
-
-let keyPair = null
-if (argv.i) {
-  keyPair = libUtils.resolveIdentity([], argv.i)
-
-  if (!keyPair) {
-    console.error('Error: identity file invalid')
-    process.exit(-1)
-  }
-
-  keyPair = libKeys.parseKeyPair(keyPair)
-}
 
 const stats = {}
 

@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 const HyperDHT = require('hyperdht')
 const net = require('net')
+const b4a = require('b4a')
 const argv = require('minimist')(process.argv.slice(2))
 const libNet = require('@hyper-cmd/lib-net')
 const libUtils = require('@hyper-cmd/lib-utils')
@@ -8,7 +9,7 @@ const libKeys = require('@hyper-cmd/lib-keys')
 const goodbye = require('graceful-goodbye')
 const connPiper = libNet.connPiper
 
-const helpMsg = 'Usage:\nhypertele-server -l service_port -u unix_socket ?--address service_address ?-c conf.json ?--seed seed ?--cert-skip'
+const helpMsg = 'Usage:\nhypertele-server -l service_port -u unix_socket ?--address service_address ?-c conf.json ?--seed seed ?--cert-skip ?--private'
 
 if (argv.help) {
   console.log(helpMsg)
@@ -52,6 +53,12 @@ if (conf.allow) {
   conf.allow = libKeys.prepKeyList(conf.allow)
 }
 
+conf.private = false
+if (argv.private) {
+  if (conf.allow) throw new Error('--private flag is not compatible with an allow list, as the private key derived from the seed is the capability')
+  conf.private = true
+}
+
 const debug = argv.debug
 
 const seed = Buffer.from(conf.seed, 'hex')
@@ -63,14 +70,22 @@ const stats = {}
 
 const destIp = argv.address || '127.0.0.1'
 
-const server = dht.createServer({
-  firewall: (remotePublicKey, remoteHandshakePayload) => {
-    if (conf.allow && !libKeys.checkAllowList(conf.allow, remotePublicKey)) {
-      return true
-    }
+const privateFirewall = (remotePublicKey) => {
+  return !b4a.equals(remotePublicKey, keyPair.publicKey)
+}
 
-    return false
-  },
+const allowListFirewall = (remotePublicKey, remoteHandshakePayload) => {
+  if (conf.allow && !libKeys.checkAllowList(conf.allow, remotePublicKey)) {
+    return true
+  }
+
+  return false
+}
+
+const firewall = conf.private ? privateFirewall : allowListFirewall
+
+const server = dht.createServer({
+  firewall,
   reusableSocket: true
 }, c => {
   connPiper(c, () => {
@@ -83,7 +98,11 @@ const server = dht.createServer({
 })
 
 server.listen(keyPair).then(() => {
-  console.log('hypertele:', keyPair.publicKey.toString('hex'))
+  if (conf.private) {
+    console.log(`hypertele (private): connect with seed ${b4a.toString(seed, 'hex')} (listening on ${b4a.toString(keyPair.publicKey, 'hex')})`)
+  } else {
+    console.log('hypertele:', keyPair.publicKey.toString('hex'))
+  }
 })
 
 if (debug) {

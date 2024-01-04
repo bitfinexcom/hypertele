@@ -25,5 +25,8 @@
   "bugs": {
     "url": "https://github.com/bitfinexcom/hypertele/issues"
   },
-  "homepage": "https://github.com/bitfinexcom/hypertele"
+  "homepage": "https://github.com/bitfinexcom/hypertele",
+  "devDependencies": {
+    "brittle": "^3.3.2"
+  }
 }

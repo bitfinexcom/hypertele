@@ -59,11 +59,17 @@ if (argv.private) {
   conf.private = true
 }
 
+// Unofficial opt, only used for tests
+let bootstrap = null
+if (argv.bootstrap) {
+  bootstrap = [{ host: '127.0.0.1', port: argv.bootstrap }]
+}
+
 const debug = argv.debug
 
 const seed = Buffer.from(conf.seed, 'hex')
 
-const dht = new HyperDHT()
+const dht = new HyperDHT({ bootstrap })
 const keyPair = HyperDHT.keyPair(seed)
 
 const stats = {}

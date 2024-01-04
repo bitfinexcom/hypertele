@@ -16,7 +16,7 @@ if (argv.help) {
   process.exit(-1)
 }
 
-if (!argv.u && !+argv.p) {
+if (!argv.u && argv.p == null) {
   console.error('Error: proxy port invalid')
   process.exit(-1)
 }
@@ -48,6 +48,12 @@ if (conf.private) {
   keyPair = HyperDHT.keyPair(b4a.from(seed, 'hex'))
 }
 
+// Unofficial opt, only used for tests
+let bootstrap = null
+if (argv.bootstrap) {
+  bootstrap = [{ host: '127.0.0.1', port: argv.bootstrap }]
+}
+
 if (argv.s) {
   conf.peer = conf.private
     ? keyPair.publicKey
@@ -76,6 +82,7 @@ const debug = argv.debug
 const stats = {}
 
 const dht = new HyperDHT({
+  bootstrap,
   keyPair
 })
 
@@ -101,7 +108,8 @@ if (argv.u) {
 } else {
   const targetHost = argv.address || '127.0.0.1'
   proxy.listen(target, targetHost, () => {
-    console.log(`Server ready @${targetHost}:${target}`)
+    const { address, port } = proxy.address()
+    console.log(`Server ready @${address}:${port}`)
   })
 }
 

@@ -57,7 +57,8 @@ if (argv.bootstrap) {
 if (argv.s) {
   conf.peer = conf.private
     ? keyPair.publicKey
-    : libUtils.resolveHostToKey([], argv.s)}
+    : libUtils.resolveHostToKey([], argv.s)
+}
 
 if (argv.c) {
   libUtils.readConf(conf, argv.c)

@@ -35,6 +35,7 @@ options:
 --cert-skip : skip certificate check when connecting to the service
 --seed SEED : seed (command-line)
 --compress : enable chunk compression
+--private : make the proxy private (do not leak the access capability to the DHT)
 ```
 
 ```sh
@@ -104,6 +105,7 @@ options:
 -s SERVER_PEER_KEY : server peer key (command-line)
 -i keypair.json : keypair file
 --compress : enable chunk compression
+--private : access a private hypertele server (expects -s to contain the server's seed instead of the public key)
 ```
 
 Read more about using identities here: https://github.com/prdn/hyper-cmd-docs/blob/main/identity.md

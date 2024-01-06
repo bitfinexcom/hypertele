@@ -31,6 +31,6 @@
     "standard": "^17.1.0"
   },
   "scripts": {
-    "test": "standard && brittle end-to-end-tests.js"
+    "test": "standard && brittle test/end-to-end-tests.js"
   }
 }

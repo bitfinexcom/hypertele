@@ -1,10 +1,15 @@
-const { spawn } = require('node:child_process')
-const { once } = require('node:events')
+const { spawn } = require('child_process')
+const { once } = require('events')
+const path = require('path')
 const http = require('http')
 const createTestnet = require('hyperdht/testnet')
 const test = require('brittle')
 const HyperDHT = require('hyperdht')
 const b4a = require('b4a')
+
+const MAIN_DIR = path.dirname(__dirname)
+const SERVER_EXECUTABLE = path.join(MAIN_DIR, 'server.js')
+const CLIENT_EXECUTABLE = path.join(MAIN_DIR, 'client.js')
 
 test('Can proxy in private mode', async t => {
   const { bootstrap } = await createTestnet(3, t.teardown)
@@ -60,7 +65,7 @@ async function setupDummyServer (teardown) {
 
 async function setupHyperteleServer (portToProxy, seed, bootstrap, t, { isPrivate = false } = {}) {
   const args = [
-    './server.js',
+    SERVER_EXECUTABLE,
     '-l',
     portToProxy,
     '--seed',
@@ -89,7 +94,7 @@ async function setupHyperteleServer (portToProxy, seed, bootstrap, t, { isPrivat
 
 async function setupHyperteleClient (seed, bootstrap, t, { isPrivate = false } = {}) {
   const args = [
-    './client.js',
+    CLIENT_EXECUTABLE,
     '-p',
     0, // random
     '-s',

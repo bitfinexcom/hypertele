@@ -8,6 +8,7 @@ const HyperDHT = require('hyperdht')
 const b4a = require('b4a')
 const tmp = require('test-tmp')
 const SecureKey = require('secure-key')
+const fsProm = require('fs/promises')
 
 const MAIN_DIR = path.dirname(__dirname)
 const SERVER_EXECUTABLE = path.join(MAIN_DIR, 'server.js')
@@ -60,7 +61,6 @@ test('Can proxy with key-file (private mode)', async t => {
   const portToProxy = await setupDummyServer(t.teardown)
   const { password, keyFile } = await setupKeyPairFile(t)
 
-  console.log('setting up server')
   await setupHyperteleServer(
     portToProxy,
     null,
@@ -68,18 +68,47 @@ test('Can proxy with key-file (private mode)', async t => {
     t,
     { isPrivate: true, keyFile, password }
   )
-  console.log('setup server')
+
   const clientPort = await setupHyperteleClient(
     null,
     bootstrap,
     t,
     { isPrivate: true, keyFile, password }
   )
-  console.log('setup client')
+
   const res = await request(clientPort)
   t.is(res.data, 'You got served', 'Proxy works')
-  console.log('password:', password)
-  console.log('keyFile:', keyFile)
+})
+
+test('Can proxy with key-file (non-private server)', async t => {
+  const { bootstrap } = await createTestnet(3, t.teardown)
+  const portToProxy = await setupDummyServer(t.teardown)
+  const keyFileInfos = await Promise.all([
+    setupKeyPairFile(t),
+    setupKeyPairFile(t)
+  ])
+  const { password: passwordServer, keyFile: keyFileServer } = keyFileInfos[0]
+  const { password: passwordClient, keyFile: keyFileClient } = keyFileInfos[1]
+
+  const pubKey = await fsProm.readFile(`${keyFileServer}.public`, 'hex')
+
+  await setupHyperteleServer(
+    portToProxy,
+    null,
+    bootstrap,
+    t,
+    { isPrivate: false, keyFile: keyFileServer, password: passwordServer }
+  )
+
+  const clientPort = await setupHyperteleClient(
+    pubKey,
+    bootstrap,
+    t,
+    { isPrivate: false, keyFile: keyFileClient, password: passwordClient }
+  )
+
+  const res = await request(clientPort)
+  t.is(res.data, 'You got served', 'Proxy works')
 })
 
 async function setupDummyServer (teardown) {

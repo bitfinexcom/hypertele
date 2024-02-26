@@ -40,13 +40,10 @@ async function main () {
     bootstrap = [{ host: '127.0.0.1', port: argv.bootstrap }]
   }
 
-  if (argv['key-file']) {
+  if (conf.private) {
     conf.peer = keyPair.publicKey
-  }
-  if (argv.s) {
-    conf.peer = conf.private
-      ? keyPair.publicKey
-      : libUtils.resolveHostToKey([], argv.s)
+  } else if (argv.s) {
+    conf.peer = libUtils.resolveHostToKey([], argv.s)
   }
 
   if (argv.c) {

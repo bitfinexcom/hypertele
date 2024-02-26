@@ -157,4 +157,4 @@ async function getKeyPair (conf, argv) {
   return keyPair
 }
 
-main()
+main().catch(console.error)

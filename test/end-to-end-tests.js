@@ -6,10 +6,15 @@ const createTestnet = require('hyperdht/testnet')
 const test = require('brittle')
 const HyperDHT = require('hyperdht')
 const b4a = require('b4a')
+const tmp = require('test-tmp')
+const SecureKey = require('secure-key')
+const fsProm = require('fs/promises')
 
 const MAIN_DIR = path.dirname(__dirname)
 const SERVER_EXECUTABLE = path.join(MAIN_DIR, 'server.js')
 const CLIENT_EXECUTABLE = path.join(MAIN_DIR, 'client.js')
+
+const DEBUG_LOG = false
 
 test('Can proxy in private mode', async t => {
   const { bootstrap } = await createTestnet(3, t.teardown)
@@ -51,6 +56,61 @@ test('Can proxy in non-private mode', async t => {
   t.is(res.data, 'You got served', 'Proxy works')
 })
 
+test('Can proxy with key-file (private mode)', async t => {
+  const { bootstrap } = await createTestnet(3, t.teardown)
+  const portToProxy = await setupDummyServer(t.teardown)
+  const { password, keyFile } = await setupKeyPairFile(t)
+
+  await setupHyperteleServer(
+    portToProxy,
+    null,
+    bootstrap,
+    t,
+    { isPrivate: true, keyFile, password }
+  )
+
+  const clientPort = await setupHyperteleClient(
+    null,
+    bootstrap,
+    t,
+    { isPrivate: true, keyFile, password }
+  )
+
+  const res = await request(clientPort)
+  t.is(res.data, 'You got served', 'Proxy works')
+})
+
+test('Can proxy with key-file (non-private server)', async t => {
+  const { bootstrap } = await createTestnet(3, t.teardown)
+  const portToProxy = await setupDummyServer(t.teardown)
+  const keyFileInfos = await Promise.all([
+    setupKeyPairFile(t),
+    setupKeyPairFile(t)
+  ])
+  const { password: passwordServer, keyFile: keyFileServer } = keyFileInfos[0]
+  const { password: passwordClient, keyFile: keyFileClient } = keyFileInfos[1]
+
+  const pubKey = await fsProm.readFile(`${keyFileServer}.public`, 'hex')
+
+  await setupHyperteleServer(
+    portToProxy,
+    null,
+    bootstrap,
+    t,
+    { isPrivate: false, keyFile: keyFileServer, password: passwordServer }
+  )
+
+  const clientPort = await setupHyperteleClient(
+    pubKey,
+    bootstrap,
+    t,
+    { isPrivate: false, keyFile: keyFileClient, password: passwordClient }
+  )
+
+  const res = await request(clientPort)
+  t.is(res.data, 'You got served', 'Proxy works')
+})
+
 async function setupDummyServer (teardown) {
   const server = http.createServer(async (req, res) => {
     res.setHeader('Content-Type', 'text/html; charset=utf-8')
@@ -63,16 +123,24 @@ async function setupDummyServer (teardown) {
   return server.address().port
 }
 
-async function setupHyperteleServer (portToProxy, seed, bootstrap, t, { isPrivate = false } = {}) {
+async function setupHyperteleServer (portToProxy, seed, bootstrap, t, { isPrivate = false, keyFile, password } = {}) {
   const args = [
     SERVER_EXECUTABLE,
     '-l',
     portToProxy,
-    '--seed',
-    seed,
     '--bootstrap',
     bootstrap[0].port
   ]
+  if (seed) {
+    args.push('--seed')
+    args.push(seed)
+  }
+  if (keyFile) {
+    args.push('--key-file')
+    args.push(keyFile)
+    args.push('--key-file-password')
+    args.push(password)
+  }
   if (isPrivate) args.push('--private')
 
   const setupServer = spawn('node', args)
@@ -81,6 +149,10 @@ async function setupHyperteleServer (portToProxy, seed, bootstrap, t, { isPrivat
   setupServer.stderr.on('data', (data) => {
     console.error(data.toString())
     t.fail('Failed to setup hypertele server')
+  })
+
+  setupServer.stdout.on('data', (data) => {
+    if (DEBUG_LOG) console.debug(console.debug(data.toString()))
   })
 
   await new Promise(resolve => {
@@ -92,16 +164,24 @@ async function setupHyperteleServer (portToProxy, seed, bootstrap, t, { isPrivat
   })
 }
 
-async function setupHyperteleClient (seed, bootstrap, t, { isPrivate = false } = {}) {
+async function setupHyperteleClient (seed, bootstrap, t, { isPrivate = false, keyFile, password } = {}) {
   const args = [
     CLIENT_EXECUTABLE,
     '-p',
     0, // random
-    '-s',
-    seed,
     '--bootstrap',
     bootstrap[0].port
   ]
+  if (seed) {
+    args.push('-s')
+    args.push(seed)
+  }
+  if (keyFile) {
+    args.push('--key-file')
+    args.push(keyFile)
+    args.push('--key-file-password')
+    args.push(password)
+  }
   if (isPrivate) args.push('--private')
 
   const setupClient = spawn('node', args)
@@ -110,6 +190,10 @@ async function setupHyperteleClient (seed, bootstrap, t, { isPrivate = false } =
   setupClient.stderr.on('data', (data) => {
     console.error(data.toString())
     t.fail('Failed to setup hypertele client')
+  })
+
+  setupClient.stdout.on('data', (data) => {
+    if (DEBUG_LOG) console.debug(data.toString())
   })
 
   const clientPort = await new Promise(resolve => {
@@ -157,4 +241,16 @@ async function request (port, { msTimeout = 500 } = {}) {
       })
     })
   })
+}
+
+async function setupKeyPairFile (t) {
+  const password = `dummy-pass-${Math.random().toString().slice(2)}`
+
+  const keysDir = await tmp(t)
+  const keyFile = path.join(keysDir, 'test-key')
+  await SecureKey.generate(keyFile, { password: b4a.from(password) })
+  return {
+    keyFile,
+    password
+  }
 }

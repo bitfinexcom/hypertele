@@ -36,6 +36,9 @@ options:
 --seed SEED : seed (command-line)
 --compress : enable chunk compression
 --private : make the proxy private (do not leak the access capability to the DHT)
+--key-file : load the key pair from the secure-key file at the specified location (https://github.com/holepunchto/secure-key)
+--key-file-password : pass in the secure-key password (the default is to read it from stdin)
+
 ```
 
 ```sh
@@ -106,6 +109,8 @@ options:
 -i keypair.json : keypair file
 --compress : enable chunk compression
 --private : access a private hypertele server (expects -s to contain the server's seed instead of the public key)
+--key-file : load the key pair from the secure-key file at the specified location (https://github.com/holepunchto/secure-key). In private mode, this should be the same file as used to launch the server.
+--key-file-password : pass in the secure-key password (the default is to read it from stdin)
 ```
 
 Read more about using identities here: https://github.com/prdn/hyper-cmd-docs/blob/main/identity.md

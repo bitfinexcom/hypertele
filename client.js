@@ -107,6 +107,8 @@ async function main () {
 
 async function getKeyPair (argv, conf) {
   if (argv['key-file']) {
+    if (argv.s && conf.private) throw new Error('key-file is not compatible with -s(eed) in private mode, since it uses the keys in the key-file instead of the seed')
+
     const password = argv['key-file-password']
       ? b4a.from(argv['key-file-password'])
       : null // read from stdin if not specified

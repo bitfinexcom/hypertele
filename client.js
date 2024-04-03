@@ -84,14 +84,13 @@ const stats = {}
 
 const dht = new HyperDHT({
   bootstrap,
-  keyPair
+  keyPair,
+  connectionKeepAlive: conf.keepAlive
 })
 
 const proxy = net.createServer({ allowHalfOpen: true }, c => {
   return connPiper(c, () => {
     const stream = dht.connect(Buffer.from(peer, 'hex'), { reusableSocket: true })
-    stream.setKeepAlive(conf.keepAlive)
-
     return stream
   }, { compress: conf.compress }, stats)
 })

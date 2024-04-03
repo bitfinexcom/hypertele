@@ -27,6 +27,7 @@ if (argv.u && argv.l) {
 }
 
 const conf = {}
+conf.keepAlive = 5000
 
 if (argv.seed) {
   conf.seed = argv.seed
@@ -69,7 +70,11 @@ const debug = argv.debug
 
 const seed = Buffer.from(conf.seed, 'hex')
 
-const dht = new HyperDHT({ bootstrap })
+const dht = new HyperDHT({
+  bootstrap,
+  connectionKeepAlive: conf.keepAlive
+})
+
 const keyPair = HyperDHT.keyPair(seed)
 
 const stats = {}

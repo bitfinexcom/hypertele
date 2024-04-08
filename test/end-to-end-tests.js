@@ -125,7 +125,7 @@ async function setupHyperteleClient (seed, bootstrap, t, { isPrivate = false } =
   return clientPort
 }
 
-async function request (port, { msTimeout = 500 } = {}) {
+async function request (port, { msTimeout = 5000 } = {}) {
   const link = `http://127.0.0.1:${port}`
 
   return new Promise((resolve, reject) => {

@@ -34,7 +34,7 @@ test('Cannot access private-mode server with public key', async t => {
   const clientPort = await setupHyperteleClient(pubKey, bootstrap, t, { isPrivate: false })
 
   // Could also be a socket hangup if more time is given
-  await t.exception(async () => await request(clientPort), /Request timeout/)
+  await t.exception(async () => await request(clientPort, { msTimeout: 1000 }), /Request timeout/)
 })
 
 test('Can proxy in non-private mode', async t => {

@@ -2,9 +2,9 @@
 const HyperDHT = require('hyperdht')
 const net = require('net')
 const argv = require('minimist')(process.argv.slice(2))
-const libNet = require('@hyper-cmd/lib-net')
-const libUtils = require('@hyper-cmd/lib-utils')
-const libKeys = require('@hyper-cmd/lib-keys')
+const libNet = require('hyper-cmd-lib-net')
+const libUtils = require('hyper-cmd-lib-utils')
+const libKeys = require('hyper-cmd-lib-keys')
 const goodbye = require('graceful-goodbye')
 const connRemoteCtrl = libNet.connRemoteCtrl
 

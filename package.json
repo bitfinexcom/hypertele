@@ -1,16 +1,16 @@
 {
   "name": "hypertele",
-  "version": "1.1.3",
+  "version": "1.1.4",
   "description": "TCP proxy over Hyperswarm!",
   "main": "index.js",
   "dependencies": {
-    "b4a": "^1.6.4",
-    "graceful-goodbye": "^1.3.0",
-    "hyper-cmd-lib-keys": "^0.1.0",
-    "hyper-cmd-lib-net": "^0.1.0",
-    "hyper-cmd-lib-utils": "^0.1.0",
-    "hyperdht": "^6.14.0",
-    "minimist": "^1.2.5"
+    "b4a": "1.6.7",
+    "graceful-goodbye": "1.3.3",
+    "hyper-cmd-lib-keys": "0.1.1",
+    "hyper-cmd-lib-net": "0.1.0",
+    "hyper-cmd-lib-utils": "0.1.0",
+    "hyperdht": "6.20.1",
+    "minimist": "1.2.8"
   },
   "bin": {
     "hypertele-server": "./server.js",
@@ -27,8 +27,8 @@
   },
   "homepage": "https://github.com/bitfinexcom/hypertele",
   "devDependencies": {
-    "brittle": "^3.3.2",
-    "standard": "^17.1.0"
+    "brittle": "3.13.1",
+    "standard": "17.1.2"
   },
   "scripts": {
     "test": "standard && brittle test/end-to-end-tests.js"
